@@ -198,7 +198,7 @@
         }
       });
     }
-    
+
     // Fetch the latest data.
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
@@ -379,5 +379,5 @@
   navigator.serviceWorker
            .register('./service-worker.js')
            .then(function() { console.log('Service Worker Registered'); });
-}
+  }
 })();
