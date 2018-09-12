@@ -1,32 +1,19 @@
-// Copyright 2016 Google Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+/* Weather Report PWA Application JS file */
 
 (function() {
-  'use strict';
+  "use strict";
 
   var app = {
     isLoading: true,
     visibleCards: {},
     selectedCities: [],
-    spinner: document.querySelector('.loader'),
-    cardTemplate: document.querySelector('.cardTemplate'),
-    container: document.querySelector('.main'),
-    addDialog: document.querySelector('.dialog-container'),
-    daysOfWeek: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    spinner: document.querySelector(".loader"),
+    cardTemplate: document.querySelector(".cardTemplate"),
+    container: document.querySelector(".main"),
+    addDialog: document.querySelector(".dialog-container"),
+    daysOfWeek: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    cities: [ 'Agra', 'Ahmedabad', 'Aizawl', 'Allahabad', 'Alleppey', 'Amritsar', 'Bengaluru', 'Bhubaneswar', 'Chennai', 'Cochin', 'Darjeeling', 'Dehradun', 'Delhi', 'Durgapur', 'Ghaziabad', 'Gorakhpur', 'Gurugram', 'Guwahati', 'Haridwar', 'Hyderabad', 'Jaipur', 'Jaisalmer', 'Jodhpur', 'Kanpur', 'Kodaikanal', 'Kanyakumari', 'Kohima', 'Kolkata', 'Ladakh', 'Lakshadweep', 'Lonavala', 'Lucknow', 'Madgaon', 'Madurai', 'Meerut', 'Mirzapur', 'Mumbai', 'Munnar', 'Mysore', 'Nagpur', 'Nainital', 'New Delhi', 'Ooty', 'Raipur', 'Rameshwaram', 'Salem', 'Shimla', 'Sikkim', 'Srinagar', 'Surat', 'Tiruchirappalli', 'Tirupati', 'Panaji', 'Patna', 'Port Blair', 'Puducherry', 'Pune', 'Udaipur', 'Varanasi', 'Vasco Da Gama', 'Visakhapatnam', 'Warangal']
   };
-
 
   /*****************************************************************************
    *
@@ -34,19 +21,28 @@
    *
    ****************************************************************************/
 
-  document.getElementById('butRefresh').addEventListener('click', function() {
+  document.getElementById("butRefresh").addEventListener("click", function() {
     // Refresh all of the forecasts
     app.updateForecasts();
   });
 
-  document.getElementById('butAdd').addEventListener('click', function() {
+  document.getElementById("butAdd").addEventListener("click", function() {
     // Open/show the add new city dialog
     app.toggleAddDialog(true);
   });
 
-  document.getElementById('butAddCity').addEventListener('click', function() {
+(function() {
+    var x = document.getElementById("selectCityToAdd");
+    app.cities.forEach(city => {
+      var option = document.createElement("option");
+      option.text = city;
+      x.add(option);
+    });
+}());
+
+  document.getElementById("butAddCity").addEventListener("click", function() {
     // Add the newly selected city
-    var select = document.getElementById('selectCityToAdd');
+    var select = document.getElementById("selectCityToAdd");
     var selected = select.options[select.selectedIndex];
     var key = selected.value;
     var label = selected.textContent;
@@ -54,7 +50,7 @@
       app.selectedCities = [];
     }
     app.getForecast(key, label);
-    app.selectedCities.push({key: key, label: label});
+    app.selectedCities.push({ key: key, label: label });
     app.saveSelectedCities();
     app.toggleAddDialog(false);
   });
@@ -70,11 +66,10 @@
   //   app.toggleAddDialog(false);
   // });
 
-  document.getElementById('butAddCancel').addEventListener('click', function() {
+  document.getElementById("butAddCancel").addEventListener("click", function() {
     // Close the add new city dialog
     app.toggleAddDialog(false);
   });
-
 
   /*****************************************************************************
    *
@@ -85,9 +80,9 @@
   // Toggles the visibility of the add new city dialog.
   app.toggleAddDialog = function(visible) {
     if (visible) {
-      app.addDialog.classList.add('dialog-container--visible');
+      app.addDialog.classList.add("dialog-container--visible");
     } else {
-      app.addDialog.classList.remove('dialog-container--visible');
+      app.addDialog.classList.remove("dialog-container--visible");
     }
   };
 
@@ -98,15 +93,18 @@
     var sunrise = data.channel.astronomy.sunrise;
     var sunset = data.channel.astronomy.sunset;
     var current = data.channel.item.condition;
+    var units = data.channel.units || {temperature:'C'};
     var humidity = data.channel.atmosphere.humidity;
+    var visibility = data.channel.atmosphere.visibility || 0 ;
     var wind = data.channel.wind;
+    var location = data.channel && data.channel.location && data.channel.location.city ? data.channel.location.city + ', ' + data.channel.location.region + ', ' + data.channel.location.country : data.label;
 
     var card = app.visibleCards[data.key];
     if (!card) {
       card = app.cardTemplate.cloneNode(true);
-      card.classList.remove('cardTemplate');
-      card.querySelector('.location').textContent = data.label;
-      card.removeAttribute('hidden');
+      card.classList.remove("cardTemplate");
+      card.querySelector(".location").textContent = location;
+      card.removeAttribute("hidden");
       app.container.appendChild(card);
       app.visibleCards[data.key] = card;
     }
@@ -114,7 +112,7 @@
     // Verifies the data provide is newer than what's already visible
     // on the card, if it's not bail, if it is, continue and update the
     // time saved in the card
-    var cardLastUpdatedElem = card.querySelector('.card-last-updated');
+    var cardLastUpdatedElem = card.querySelector(".card-last-updated");
     var cardLastUpdated = cardLastUpdatedElem.textContent;
     if (cardLastUpdated) {
       cardLastUpdated = new Date(cardLastUpdated);
@@ -125,41 +123,53 @@
     }
     cardLastUpdatedElem.textContent = data.created;
 
-    card.querySelector('.description').textContent = current.text;
-    card.querySelector('.date').textContent = current.date;
-    card.querySelector('.current .icon').classList.add(app.getIconClass(current.code));
-    card.querySelector('.current .temperature .value').textContent =
-      Math.round(current.temp);
-    card.querySelector('.current .sunrise').textContent = sunrise;
-    card.querySelector('.current .sunset').textContent = sunset;
-    card.querySelector('.current .humidity').textContent =
-      Math.round(humidity) + '%';
-    card.querySelector('.current .wind .value').textContent =
-      Math.round(wind.speed);
-    card.querySelector('.current .wind .direction').textContent = wind.direction;
-    var nextDays = card.querySelectorAll('.future .oneday');
+    card.querySelector(".description").textContent = current.text;
+    card.querySelector(".date").textContent = current.date;
+    card
+      .querySelector(".current .icon")
+      .classList.add(app.getIconClass(current.code));
+    card.querySelector(".current .temperature .value").textContent = Math.round(
+      current.temp
+    );
+    card.querySelector(".current .temperature .scale").textContent = '°' + units.temperature || 'C';
+    card.querySelector(".current .temperature .temp-high").textContent = data.channel.item.forecast[0].high;
+    card.querySelector(".current .temperature .temp-low").textContent = data.channel.item.forecast[0].low;
+    card.querySelector(".current .sunrise").textContent = sunrise;
+    card.querySelector(".current .sunset").textContent = sunset;
+    card.querySelector(".current .visibility").textContent = visibility + ' miles';
+    card.querySelector(".current .humidity").textContent =
+      Math.round(humidity) + "%";
+    card.querySelector(".current .wind .value").textContent = Math.round(
+      wind.speed
+    );
+    card.querySelector(".current .wind .direction").textContent =
+      wind.direction;
+    var nextDays = card.querySelectorAll(".future .oneday");
     var today = new Date();
     today = today.getDay();
     for (var i = 0; i < 7; i++) {
       var nextDay = nextDays[i];
       var daily = data.channel.item.forecast[i];
       if (daily && nextDay) {
-        nextDay.querySelector('.date').textContent =
+        nextDay.querySelector(".date").textContent =
           app.daysOfWeek[(i + today) % 7];
-        nextDay.querySelector('.icon').classList.add(app.getIconClass(daily.code));
-        nextDay.querySelector('.temp-high .value').textContent =
-          Math.round(daily.high);
-        nextDay.querySelector('.temp-low .value').textContent =
-          Math.round(daily.low);
+        nextDay
+          .querySelector(".icon")
+          .classList.add(app.getIconClass(daily.code));
+        nextDay.querySelector(".temp-high .value").textContent = Math.round(
+          daily.high
+        );
+        nextDay.querySelector(".temp-low .value").textContent = Math.round(
+          daily.low
+        );
       }
     }
     if (app.isLoading) {
-      app.spinner.setAttribute('hidden', true);
-      app.container.removeAttribute('hidden');
+      app.spinner.setAttribute("hidden", true);
+      app.container.removeAttribute("hidden");
       app.isLoading = false;
     }
   };
-
 
   /*****************************************************************************
    *
@@ -176,11 +186,12 @@
    * freshest data.
    */
   app.getForecast = function(key, label) {
-    var statement = 'select * from weather.forecast where woeid=' + key;
-    var url = 'https://query.yahooapis.com/v1/public/yql?format=json&q=' +
-        statement;
+    // var statement = "select * from weather.forecast where woeid=" + key;
+    var statement = 'select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + label + '%2C%20In%22)%20and%20u%3D%22c%22&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys';
+    var url =
+      "https://query.yahooapis.com/v1/public/yql?format=json&q=" + statement;
     // TODO add cache logic here
-    if ('caches' in window) {
+    if ("caches" in window) {
       /*
        * Check if the service worker has already cached this city's weather
        * data. If the service worker has the data, then display the cached
@@ -216,7 +227,7 @@
         app.updateForecastCard(initialWeatherForecast);
       }
     };
-    request.open('GET', url);
+    request.open("GET", url);
     request.send();
   };
 
@@ -245,7 +256,7 @@
       case 34: // fair (day)
       case 36: // hot
       case 3200: // not available
-        return 'clear-day';
+        return "clear-day";
       case 0: // tornado
       case 1: // tropical storm
       case 2: // hurricane
@@ -258,7 +269,7 @@
       case 17: // hail
       case 35: // mixed rain and hail
       case 40: // scattered showers
-        return 'rain';
+        return "rain";
       case 3: // severe thunderstorms
       case 4: // thunderstorms
       case 37: // isolated thunderstorms
@@ -266,7 +277,7 @@
       case 39: // scattered thunderstorms (not a typo)
       case 45: // thundershowers
       case 47: // isolated thundershowers
-        return 'thunderstorms';
+        return "thunderstorms";
       case 5: // mixed rain and snow
       case 7: // mixed snow and sleet
       case 13: // snow flurries
@@ -277,25 +288,25 @@
       case 42: // scattered snow showers
       case 43: // heavy snow
       case 46: // snow showers
-        return 'snow';
+        return "snow";
       case 15: // blowing snow
       case 19: // dust
       case 20: // foggy
       case 21: // haze
       case 22: // smoky
-        return 'fog';
+        return "fog";
       case 24: // windy
       case 23: // blustery
-        return 'windy';
+        return "windy";
       case 26: // cloudy
       case 27: // mostly cloudy (night)
       case 28: // mostly cloudy (day)
       case 31: // clear (night)
-        return 'cloudy';
+        return "cloudy";
       case 29: // partly cloudy (night)
       case 30: // partly cloudy (day)
       case 44: // partly cloudy
-        return 'partly-cloudy-day';
+        return "partly-cloudy-day";
     }
   };
 
@@ -305,9 +316,9 @@
    * discussion.
    */
   var initialWeatherForecast = {
-    key: '2459115',
-    label: 'New York, NY',
-    created: '2016-07-22T01:00:00Z',
+    key: "2459115",
+    label: "New York, ",
+    created: "2016-07-22T01:00:00Z",
     channel: {
       astronomy: {
         sunrise: "5:43 am",
@@ -321,13 +332,13 @@
           code: 24
         },
         forecast: [
-          {code: 44, high: 86, low: 70},
-          {code: 44, high: 94, low: 73},
-          {code: 4, high: 95, low: 78},
-          {code: 24, high: 75, low: 89},
-          {code: 24, high: 89, low: 77},
-          {code: 44, high: 92, low: 79},
-          {code: 44, high: 89, low: 77}
+          { code: 44, high: 86, low: 70 },
+          { code: 44, high: 94, low: 73 },
+          { code: 4, high: 95, low: 78 },
+          { code: 24, high: 75, low: 89 },
+          { code: 24, high: 89, low: 77 },
+          { code: 44, high: 92, low: 79 },
+          { code: 44, high: 89, low: 77 }
         ]
       },
       atmosphere: {
@@ -341,43 +352,43 @@
   };
   // TODO uncomment line below to test app with fake data
   //app.updateForecastCard(initialWeatherForecast);
-//hbjsahdbsahjd
-// dsfkjshfhsdk222222
-// 3333333
+  //hbjsahdbsahjd
+  // dsfkjshfhsdk222222
+  // 3333333
   // TODO add startup code here
   /************************************************************************
-     *
-     * Code required to start the app
-     *
-     * NOTE: To simplify this codelab, we've used localStorage.
-     *   localStorage is a synchronous API and has serious performance
-     *   implications. It should not be used in production applications!
-     *   Instead, check out IDB (https://www.npmjs.com/package/idb) or
-     *   SimpleDB (https://gist.github.com/inexorabletash/c8069c042b734519680c)
-     ************************************************************************/
+   *
+   * Code required to start the app
+   *
+   * NOTE: To simplify this codelab, we've used localStorage.
+   *   localStorage is a synchronous API and has serious performance
+   *   implications. It should not be used in production applications!
+   *   Instead, check out IDB (https://www.npmjs.com/package/idb) or
+   *   SimpleDB (https://gist.github.com/inexorabletash/c8069c042b734519680c)
+   ************************************************************************/
 
-    app.selectedCities = localStorage.selectedCities;
-    if (app.selectedCities) {
-      app.selectedCities = JSON.parse(app.selectedCities);
-      app.selectedCities.forEach(function(city) {
-        app.getForecast(city.key, city.label);
-      });
-    } else {
-      /* The user is using the app for the first time, or the user has not
+  app.selectedCities = localStorage.selectedCities;
+  if (app.selectedCities) {
+    app.selectedCities = JSON.parse(app.selectedCities);
+    app.selectedCities.forEach(function(city) {
+      app.getForecast(city.key, city.label);
+    });
+  } else {
+    /* The user is using the app for the first time, or the user has not
        * saved any cities, so show the user some fake data. A real app in this
        * scenario could guess the user's location via IP lookup and then inject
        * that data into the page.
        */
-      app.updateForecastCard(initialWeatherForecast);
-      app.selectedCities = [
-        {key: initialWeatherForecast.key, label: initialWeatherForecast.label}
-      ];
-      app.saveSelectedCities();
-    }
+    app.updateForecastCard(initialWeatherForecast);
+    app.selectedCities = [
+      { key: initialWeatherForecast.key, label: initialWeatherForecast.label }
+    ];
+    app.saveSelectedCities();
+  }
   // TODO add service worker code here
-  if ('serviceWorker' in navigator) {
-  navigator.serviceWorker
-           .register('./service-worker.js')
-           .then(function() { console.log('Service Worker Registered'); });
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./service-worker.js").then(function() {
+      console.log("Service Worker Registered");
+    });
   }
 })();

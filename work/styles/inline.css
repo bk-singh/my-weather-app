@@ -271,7 +271,7 @@ body {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-    font-size: 4em; }
+    font-size: 2em; }
     .weather-forecast .current .visual .scale {
       font-size: 0.5em;
       vertical-align: super; }
@@ -282,6 +282,9 @@ body {
             flex-grow: 1; }
   .weather-forecast .current .sunset:before {
     content: "Sunset: ";
+    color: #888; }
+  .weather-forecast .current .visibility:before {
+    content: "Visibility: ";
     color: #888; }
   .weather-forecast .current .wind:before {
     content: "Wind: ";
@@ -405,3 +408,7 @@ body {
   .mdl-button--primary.mdl-button--primary.mdl-button--raised, .mdl-button--primary.mdl-button--primary.mdl-button--fab {
     color: white;
     background-color: #3f51b5; }
+    .current-temp{
+      font-size: 0.5em;
+      display: inline-flex;
+    }
