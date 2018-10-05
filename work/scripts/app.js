@@ -315,41 +315,151 @@
    * or when the user has not saved any cities. See startup code for more
    * discussion.
    */
-  var initialWeatherForecast = {
-    key: "2459115",
-    label: "New York, ",
-    created: "2016-07-22T01:00:00Z",
-    channel: {
-      astronomy: {
-        sunrise: "5:43 am",
-        sunset: "8:21 pm"
-      },
-      item: {
-        condition: {
-          text: "Windy",
-          date: "Thu, 21 Jul 2016 09:00 PM EDT",
-          temp: 56,
-          code: 24
+  /*
+*/
+ var initialWeatherForecast =
+{
+      "channel": {
+        "units": {
+          "distance": "km",
+          "pressure": "mb",
+          "speed": "km/h",
+          "temperature": "C"
         },
-        forecast: [
-          { code: 44, high: 86, low: 70 },
-          { code: 44, high: 94, low: 73 },
-          { code: 4, high: 95, low: 78 },
-          { code: 24, high: 75, low: 89 },
-          { code: 24, high: 89, low: 77 },
-          { code: 44, high: 92, low: 79 },
-          { code: 44, high: 89, low: 77 }
-        ]
-      },
-      atmosphere: {
-        humidity: 56
-      },
-      wind: {
-        speed: 25,
-        direction: 195
+        "title": "Yahoo! Weather - Agra, UP, IN",
+        "link": "http://us.rd.yahoo.com/dailynews/rss/weather/Country__Country/*https://weather.yahoo.com/country/state/city-2295399/",
+        "description": "Yahoo! Weather for Agra, UP, IN",
+        "language": "en-us",
+        "lastBuildDate": "Fri, 05 Oct 2018 01:41 PM IST",
+        "ttl": "60",
+        "location": {
+          "city": "Agra",
+          "country": "India",
+          "region": " UP"
+        },
+        "wind": {
+          "chill": "91",
+          "direction": "293",
+          "speed": "6.44"
+        },
+        "atmosphere": {
+          "humidity": "45",
+          "pressure": "33626.85",
+          "rising": "0",
+          "visibility": "25.91"
+        },
+        "astronomy": {
+          "sunrise": "6:13 am",
+          "sunset": "6:0 pm"
+        },
+        "image": {
+          "title": "Yahoo! Weather",
+          "width": "142",
+          "height": "18",
+          "link": "http://weather.yahoo.com",
+          "url": "http://l.yimg.com/a/i/brand/purplelogo//uh/us/news-wea.gif"
+        },
+        "item": {
+          "title": "Conditions for Agra, UP, IN at 12:30 PM IST",
+          "lat": "27.1838",
+          "long": "77.994453",
+          "link": "http://us.rd.yahoo.com/dailynews/rss/weather/Country__Country/*https://weather.yahoo.com/country/state/city-2295399/",
+          "pubDate": "Fri, 05 Oct 2018 12:30 PM IST",
+          "condition": {
+            "code": "32",
+            "date": "Fri, 05 Oct 2018 12:30 PM IST",
+            "temp": "32",
+            "text": "Sunny"
+          },
+          "forecast": [
+            {
+              "code": "32",
+              "date": "05 Oct 2018",
+              "day": "Fri",
+              "high": "33",
+              "low": "21",
+              "text": "Sunny"
+            },
+            {
+              "code": "32",
+              "date": "06 Oct 2018",
+              "day": "Sat",
+              "high": "33",
+              "low": "21",
+              "text": "Sunny"
+            },
+            {
+              "code": "32",
+              "date": "07 Oct 2018",
+              "day": "Sun",
+              "high": "33",
+              "low": "20",
+              "text": "Sunny"
+            },
+            {
+              "code": "32",
+              "date": "08 Oct 2018",
+              "day": "Mon",
+              "high": "33",
+              "low": "21",
+              "text": "Sunny"
+            },
+            {
+              "code": "32",
+              "date": "09 Oct 2018",
+              "day": "Tue",
+              "high": "33",
+              "low": "19",
+              "text": "Sunny"
+            },
+            {
+              "code": "30",
+              "date": "10 Oct 2018",
+              "day": "Wed",
+              "high": "33",
+              "low": "22",
+              "text": "Partly Cloudy"
+            },
+            {
+              "code": "30",
+              "date": "11 Oct 2018",
+              "day": "Thu",
+              "high": "31",
+              "low": "20",
+              "text": "Partly Cloudy"
+            },
+            {
+              "code": "30",
+              "date": "12 Oct 2018",
+              "day": "Fri",
+              "high": "31",
+              "low": "22",
+              "text": "Partly Cloudy"
+            },
+            {
+              "code": "34",
+              "date": "13 Oct 2018",
+              "day": "Sat",
+              "high": "31",
+              "low": "21",
+              "text": "Mostly Sunny"
+            },
+            {
+              "code": "34",
+              "date": "14 Oct 2018",
+              "day": "Sun",
+              "high": "30",
+              "low": "19",
+              "text": "Mostly Sunny"
+            }
+          ],
+          "description": "<![CDATA[<img src=\"http://l.yimg.com/a/i/us/we/52/32.gif\"/>\n<BR />\n<b>Current Conditions:</b>\n<BR />Sunny\n<BR />\n<BR />\n<b>Forecast:</b>\n<BR /> Fri - Sunny. High: 33Low: 21\n<BR /> Sat - Sunny. High: 33Low: 21\n<BR /> Sun - Sunny. High: 33Low: 20\n<BR /> Mon - Sunny. High: 33Low: 21\n<BR /> Tue - Sunny. High: 33Low: 19\n<BR />\n<BR />\n<a href=\"http://us.rd.yahoo.com/dailynews/rss/weather/Country__Country/*https://weather.yahoo.com/country/state/city-2295399/\">Full Forecast at Yahoo! Weather</a>\n<BR />\n<BR />\n<BR />\n]]>",
+          "guid": {
+            "isPermaLink": "false"
+          }
+        }
       }
-    }
-  };
+};
   // TODO uncomment line below to test app with fake data
   //app.updateForecastCard(initialWeatherForecast);
   //hbjsahdbsahjd
