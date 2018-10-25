@@ -22,6 +22,22 @@
     <h1 class="header__title">Weather PWA</h1>
     <button id="butRefresh" class="headerButton" aria-label="Refresh"></button>
     <button id="butAdd" class="headerButton" aria-label="Add"></button>
+    <div class='googleSigninDiv'>
+      <button id = 'googleSignin' style="border-radius: 10%;">
+        <div class="left" style="float: left; margin-right:10px;">
+          <img width="20px" alt="Google" src="images/google-logo.png"/>
+        </div>
+        <span style="font-size: 12px">Login</span>
+      </a>
+    </div>
+    <div class='googleSignoutDiv'>
+      <button id = 'googleSignout' style="border-radius: 10%;">
+        <div class="left" style="float: left; margin-right:10px;">
+          <img width="20px" alt="Google" src="images/google-logo.png"/>
+        </div>
+        <span style="font-size: 12px">Logout</span>
+      </a>
+    </div>
   </header>
 
   <main class="main">
@@ -154,6 +170,22 @@
       <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
     </svg>
   </div>
+  <!-- include and configure firebase -->
+  <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
+  <!-- <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-database.js"></scrpt>
+  <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-auth.js"></script> -->
+
+  <script>
+    var config = {
+      apiKey: "AIzaSyBSUNMpdNQ3dxVyGMHRHIuIHB85C5P1SuY",
+      authDomain: "weather-app-471e9.firebaseapp.com",
+      databaseURL: "https://weather-app-471e9.firebaseio.com",
+      projectId: "weather-app-471e9",
+      storageBucket: "weather-app-471e9.appspot.com",
+      messagingSenderId: "378573706078"
+    };
+    firebase.initializeApp(config);
+  </script>
 
   <!-- Uncomment the line below when ready to test with fake data -->
   <script src="scripts/app.js" async></script>

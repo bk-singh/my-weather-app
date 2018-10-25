@@ -412,3 +412,6 @@ body {
       font-size: 0.5em;
       display: inline-flex;
     }
+.no-display {
+  display: none
+    }

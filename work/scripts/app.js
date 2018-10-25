@@ -5,9 +5,12 @@
 
   var app = {
     isLoading: true,
+    isloggedin: false,
     visibleCards: {},
     selectedCities: [],
     spinner: document.querySelector(".loader"),
+    googleSigninDiv: document.querySelector(".googleSigninDiv"),
+    googleSignoutDiv: document.querySelector(".googleSignoutDiv"),
     cardTemplate: document.querySelector(".cardTemplate"),
     container: document.querySelector(".main"),
     addDialog: document.querySelector(".dialog-container"),
@@ -21,13 +24,99 @@
    *
    ****************************************************************************/
 
+  document.getElementById("googleSignin").addEventListener("click", function() {
+    // googleSignin
+    app.googleSignin();
+  });
+
+  document.getElementById("googleSignout").addEventListener("click", function() {
+    // googleSignout
+    app.googleSignout();
+  });
+
   document.getElementById("butRefresh").addEventListener("click", function() {
     // Refresh all of the forecasts
     app.updateForecasts();
   });
 
+  // firebase.auth().signInAnonymously().catch(function(error) {
+  //   // window.algit qert("login Anonymously");
+  //   // Handle Errors here.
+  //   var errorCode = error.code;
+  //   var errorMessage = error.message;
+  //   // ...
+  // });
+
+  // firebase.auth().onAuthStateChanged(function(user) {
+  //   // window.alert("login");
+  //   if (user) {
+  //     // User is signed in.
+  //     // debugger;
+  //     var isAnonymous = user.isAnonymous;
+  //     var uid = user.uid;
+  //     var userRef = app.dataInfo.child(app.users);
+  //     var useridRef = userRef.child(app.userid);
+  //     useridRef.set({
+  //       locations: "",
+  //       theme: "",
+  //       colorScheme: "",
+  //       food: ""
+  //     });
+  //   } else {
+  //     // User is signed out.
+  //     // ...
+  //   }
+  //   // ...
+  // });
+
   document.getElementById("butAdd").addEventListener("click", function() {
     // Open/show the add new city dialog
+    // var ref = new Firebase('https://weather-app-471e9.firebaseio.com');
+    var playersRef = firebase.database().ref("players");
+    // var playersRef = ref.child("players");
+    playersRef.push ({
+      name: "John",
+      number: 1,
+      age: 30
+    });
+
+    playersRef.push ({
+      name: "Amanda",
+      number: 2,
+      age: 20
+});
+playersRef.on("child_added", function(data, prevChildKey) {
+  var newPlayer = data.val();
+  console.log("name: " + newPlayer.name);
+  console.log("age: " + newPlayer.age);
+  console.log("number: " + newPlayer.number);
+  console.log("Previous Player: " + prevChildKey);
+});
+
+playersRef.on("child_changed", function(data) {
+  var player = data.val();
+  console.log("The updated player name is " + player.name);
+});
+var ref = firebase.database().ref('players');
+ref.on("value", function(snapshot) {
+   console.log(snapshot.val());
+}, function (error) {
+   console.log("Error: " + error.code);
+});
+
+//     var playersRef = firebase.database().ref("players/");
+// playersRef.set ({
+//    John: {
+//       number: 1,
+//       age: 30
+//    },
+//    Amanda: {
+//       number: 2,
+//       age: 20
+//    }
+// });
+//     var firebaseRef = firebase.database().ref('/testing/'+ 'doc11/');
+//     firebaseRef.child("test-name").set("test-value");
     app.toggleAddDialog(true);
   });
 
@@ -85,7 +174,16 @@
       app.addDialog.classList.remove("dialog-container--visible");
     }
   };
-
+  // Toggles the login and logout.
+  app.toggleLogin = function(isloggedin) {
+    if (isloggedin) {
+      app.googleSigninDiv.classList.add("no-display");
+      app.googleSignoutDiv.classList.remove("no-display");
+    } else {
+      app.googleSignoutDiv.classList.add("no-display");
+      app.googleSigninDiv.classList.remove("no-display");
+    }
+  };
   // Updates a weather card with the latest weather forecast. If the card
   // doesn't already exist, it's cloned from the template.
   app.updateForecastCard = function(data) {
@@ -230,6 +328,42 @@
     request.open("GET", url);
     request.send();
   };
+
+
+// google signin and signout
+  var provider = new firebase.auth.GoogleAuthProvider();
+
+  app.googleSignin = function() {
+     firebase.auth()
+     .signInWithPopup(provider).then(function(result) {
+        var token = result.credential.accessToken;
+        var user = result.user;
+        var photoURL = user.photoURL;
+        var displayName = user.displayName;
+        app.isloggedin = true;
+        app.toggleLogin(app.isloggedin);
+        console.log(token);
+        console.log(user)
+     }).catch(function(error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(error.code)
+        console.log(error.message)
+     });
+  }
+
+
+  app.googleSignout = function() {
+     firebase.auth().signOut()
+     .then(function() {
+        app.isloggedin = false;
+        app.toggleLogin(app.isloggedin);
+        console.log('Signout Succesfull')
+     }, function(error) {
+        console.log('Signout Failed')
+     });
+  }
+
 
   // Iterate all of the cards and attempt to get the latest forecast data
   app.updateForecasts = function() {
