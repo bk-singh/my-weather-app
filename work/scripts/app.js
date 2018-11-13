@@ -323,6 +323,7 @@ ref.on("value", function(snapshot) {
       } else {
         // Return the initial weather forecast since no data is available.
         app.updateForecastCard(initialWeatherForecast);
+        app.toggleLogin(app.isloggedin);
       }
     };
     request.open("GET", url);
