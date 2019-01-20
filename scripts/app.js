@@ -298,11 +298,11 @@ ref.on("value", function(snapshot) {
       caches.match(url).then(function(response) {
         if (response) {
           response.json().then(function updateFromCache(json) {
-            var results = json.query.results;
-            results.key = key;
-            results.label = label;
-            results.created = json.query.created;
-            app.updateForecastCard(results);
+            // var results = json.query.results;
+            // results.key = key;
+            // results.label = label;
+            // results.created = json.query.created;
+            // app.updateForecastCard(results);
           });
         }
       });
@@ -313,19 +313,21 @@ ref.on("value", function(snapshot) {
     request.onreadystatechange = function() {
       if (request.readyState === XMLHttpRequest.DONE) {
         if (request.status === 200) {
-          var response = JSON.parse(request.response);
-          var results = response.query.results;
-          results.key = key;
-          results.label = label;
-          results.created = response.query.created;
-          app.updateForecastCard(results);
+          console.log(request);
+          // var response = JSON.parse(request.response);
+          // var results = response.query.results;
+          // results.key = key;
+          // results.label = label;
+          // results.created = response.query.created;
+          // app.updateForecastCard(results);
         }
       } else {
         // Return the initial weather forecast since no data is available.
-        app.updateForecastCard(initialWeatherForecast);
-        app.toggleLogin(app.isloggedin);
+        // app.updateForecastCard(initialWeatherForecast);
+        // app.toggleLogin(app.isloggedin);
       }
     };
+    url = 'https://bksun.herokuapp.com/api/categories';
     request.open("GET", url);
     request.send();
   };
